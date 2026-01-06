@@ -1,0 +1,45 @@
+# Loftet Musikk AS - Hugo konfigurasjon
+baseURL = 'https://loftet.no/'
+languageCode = 'nn'
+defaultContentLanguage = 'nn'
+title = 'Loftet Musikk'
+
+# Tema (blir sett opp seinare)
+# theme = 'loftet-theme'
+
+# Bygg-innstillingar
+enableRobotsTXT = true
+enableGitInfo = false
+
+[params]
+  description = "Musikkinstrument og tilhøyr frå Sogndal"
+  author = "Loftet Musikk AS"
+  contact = "post@loftet.no"
+  orgnr = "836 717 392"
+
+[menu]
+  [[menu.main]]
+    identifier = "heim"
+    name = "Heim"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "om-oss"
+    name = "Om oss"
+    url = "/om-oss/"
+    weight = 2
+  [[menu.main]]
+    identifier = "kontakt"
+    name = "Kontakt"
+    url = "/kontakt/"
+    weight = 3
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+  page = ["HTML"]

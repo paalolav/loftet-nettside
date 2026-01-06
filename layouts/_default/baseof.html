@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <style>
+    :root {
+      --farge-hovud: #2c3e50;
+      --farge-aksent: #e67e22;
+      --farge-bakgrunn: #fafafa;
+      --farge-tekst: #333;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: var(--farge-tekst);
+      background: var(--farge-bakgrunn);
+    }
+    header {
+      background: var(--farge-hovud);
+      color: white;
+      padding: 1rem 2rem;
+    }
+    header a { color: white; text-decoration: none; }
+    header nav { display: flex; gap: 2rem; align-items: center; }
+    header nav ul { display: flex; gap: 1.5rem; list-style: none; margin-left: auto; }
+    header nav ul a:hover { text-decoration: underline; }
+    main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+    footer {
+      background: var(--farge-hovud);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+    }
+    footer a { color: white; }
+    h1, h2, h3 { color: var(--farge-hovud); margin-bottom: 1rem; }
+    p { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/"><strong>{{ .Site.Title }}</strong></a>
+      <ul>
+        {{ range .Site.Menus.main }}
+        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+        {{ end }}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <footer>
+    <p>&copy; {{ now.Year }} {{ .Site.Params.author }} | Org.nr: {{ .Site.Params.orgnr }}</p>
+    <p><a href="mailto:{{ .Site.Params.contact }}">{{ .Site.Params.contact }}</a></p>
+  </footer>
+</body>
+</html>

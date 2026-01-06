@@ -1,0 +1,50 @@
+# Decap CMS konfigurasjon for Loftet Musikk
+
+backend:
+  name: github
+  repo: paalolav/loftet-nettside
+  branch: main
+
+# For lokal utvikling utan backend
+local_backend: true
+
+# Media
+media_folder: static/images
+public_folder: /images
+
+# Nynorsk grensesnitt (partial)
+locale: 'nn'
+
+# Innhaldstypar
+collections:
+  - name: "sider"
+    label: "Sider"
+    files:
+      - label: "Framside"
+        name: "framside"
+        file: "content/_index.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Hovudtekst", name: "body", widget: "markdown"}
+
+      - label: "Om oss"
+        name: "om-oss"
+        file: "content/om-oss.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Innhald", name: "body", widget: "markdown"}
+
+      - label: "Kontakt"
+        name: "kontakt"
+        file: "content/kontakt.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "E-post", name: "email", widget: "string"}
+          - {label: "Innhald", name: "body", widget: "markdown"}
+
+      - label: "Personvern"
+        name: "personvern"
+        file: "content/personvern.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Innhald", name: "body", widget: "markdown"}
