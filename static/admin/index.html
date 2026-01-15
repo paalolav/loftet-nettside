@@ -3,9 +3,171 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Loftet Musikk - Innhaldsadministrasjon</title>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <title>Loftet - Rediger nettsida</title>
+  <style>
+    /* PUBLISER-knapp - plassert i botn */
+    #publiser-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      z-index: 99999;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+    }
+    #publiser-btn {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    #publiser-btn:hover { background: #16a34a; }
+    #publiser-btn:disabled { background: #9ca3af; cursor: wait; }
+    #status-msg {
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      margin-right: 16px;
+    }
+    /* Hjelp-trekkspel */
+    #hjelp-btn {
+      background: transparent;
+      color: #888;
+      border: 1px solid #444;
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: auto;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    #hjelp-btn:hover { color: #fff; border-color: #666; }
+    #hjelp-panel {
+      display: none;
+      position: fixed;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      background: #2d2d2d;
+      padding: 16px 24px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      color: #ccc;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    }
+    #hjelp-panel.open { display: block; }
+    #hjelp-panel h3 { color: #fff; margin: 0 0 12px 0; font-size: 14px; }
+    #hjelp-panel code {
+      background: #444;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #7dd;
+    }
+    #hjelp-panel table { width: 100%; border-collapse: collapse; }
+    #hjelp-panel td { padding: 6px 12px 6px 0; vertical-align: top; }
+    #hjelp-panel td:first-child { white-space: nowrap; }
+    /* Plass til botn-bar */
+    body { margin: 0; padding-bottom: 70px; }
+    #loading {
+      text-align: center;
+      padding: 100px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
+  <div id="hjelp-panel">
+    <h3>Formatering</h3>
+    <table>
+      <tr>
+        <td><code>&lt;center&gt;tekst&lt;/center&gt;</code></td>
+        <td>Sentrert tekst</td>
+      </tr>
+      <tr>
+        <td><code>**tekst**</code></td>
+        <td><strong>Feit skrift</strong></td>
+      </tr>
+      <tr>
+        <td><code>*tekst*</code></td>
+        <td><em>Kursiv</em></td>
+      </tr>
+      <tr>
+        <td><code>## Overskrift</code></td>
+        <td>Stor overskrift</td>
+      </tr>
+      <tr>
+        <td><code>### Underoverskrift</code></td>
+        <td>Mindre overskrift</td>
+      </tr>
+      <tr>
+        <td><code>[tekst](https://url.no)</code></td>
+        <td>Lenke</td>
+      </tr>
+    </table>
+  </div>
+
+  <div id="publiser-container">
+    <button id="hjelp-btn" onclick="toggleHjelp()">? Hjelp</button>
+    <span id="status-msg"></span>
+    <button id="publiser-btn" onclick="publiser()">PUBLISER TIL LOFTET.NO</button>
+  </div>
+
+  <div id="loading">Lastar redigeringsverktøy...</div>
+
+  <!-- Decap CMS -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+    // Sjekk at CMS lasta
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var loading = document.getElementById('loading');
+        var cmsRoot = document.getElementById('nc-root');
+        if (!cmsRoot || cmsRoot.innerHTML.trim() === '') {
+          loading.innerHTML = '<p style="color:red">Feil: CMS lasta ikkje.</p>' +
+            '<p>Sjekk Console (Cmd+Option+I) for feilmeldingar.</p>';
+        } else {
+          loading.style.display = 'none';
+        }
+      }, 3000);
+    });
+
+    function toggleHjelp() {
+      document.getElementById('hjelp-panel').classList.toggle('open');
+    }
+
+    async function publiser() {
+      const btn = document.getElementById('publiser-btn');
+      const msg = document.getElementById('status-msg');
+      btn.disabled = true;
+      btn.textContent = 'Publiserer...';
+      try {
+        const response = await fetch('http://localhost:3456/publiser', { method: 'POST' });
+        const data = await response.json();
+        if (data.success) {
+          btn.textContent = 'FERDIG!';
+          msg.textContent = 'loftet.no er oppdatert!';
+          setTimeout(() => { btn.textContent = 'PUBLISER TIL LOFTET.NO'; btn.disabled = false; msg.textContent = ''; }, 3000);
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (error) {
+        btn.textContent = 'FEIL!';
+        msg.textContent = error.message;
+        btn.disabled = false;
+        setTimeout(() => { btn.textContent = 'PUBLISER TIL LOFTET.NO'; }, 3000);
+      }
+    }
+  </script>
 </body>
 </html>

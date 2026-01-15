@@ -1,0 +1,8 @@
+# robots.txt - Loftet Musikk AS
+# https://loftet.no
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://loftet.no/sitemap.xml

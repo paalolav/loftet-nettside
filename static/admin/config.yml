@@ -1,37 +1,45 @@
-# Decap CMS konfigurasjon for Loftet Musikk
+# Decap CMS - Lokal modus (køyr decap-server)
 
-backend:
-  name: github
-  repo: paalolav/loftet-nettside
-  branch: main
-
-# For lokal utvikling utan backend
 local_backend: true
 
-# Media
+backend:
+  name: git-gateway
+
 media_folder: static/images
 public_folder: /images
 
-# Nynorsk grensesnitt (partial)
 locale: 'nn'
 
-# Innhaldstypar
 collections:
+  # Nye sider - lag så mange du vil
+  - name: "nye-sider"
+    label: "Lag ny side"
+    folder: "content"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Tittel", name: "title", widget: "string"}
+      - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
+      - {label: "Innhald", name: "body", widget: "markdown"}
+
+  # Eksisterande sider
   - name: "sider"
-    label: "Sider"
+    label: "Faste sider"
     files:
       - label: "Framside"
         name: "framside"
         file: "content/_index.md"
         fields:
           - {label: "Tittel", name: "title", widget: "string"}
-          - {label: "Hovudtekst", name: "body", widget: "markdown"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string"}
+          - {label: "Innhald", name: "body", widget: "markdown"}
 
       - label: "Om oss"
         name: "om-oss"
         file: "content/om-oss.md"
         fields:
           - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
           - {label: "Innhald", name: "body", widget: "markdown"}
 
       - label: "Kontakt"
@@ -39,7 +47,33 @@ collections:
         file: "content/kontakt.md"
         fields:
           - {label: "Tittel", name: "title", widget: "string"}
-          - {label: "E-post", name: "email", widget: "string"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
+          - {label: "E-post", name: "email", widget: "string", required: false}
+          - {label: "Innhald", name: "body", widget: "markdown"}
+
+      - label: "Nettbutikk"
+        name: "butikk"
+        file: "content/butikk/_index.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
+          - {label: "Utkast", name: "draft", widget: "boolean", default: false}
+          - {label: "Innhald", name: "body", widget: "markdown"}
+
+      - label: "Kjøpsvilkår"
+        name: "vilkar"
+        file: "content/vilkar.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
+          - {label: "Innhald", name: "body", widget: "markdown"}
+
+      - label: "Returpolitikk"
+        name: "returpolitikk"
+        file: "content/returpolitikk.md"
+        fields:
+          - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
           - {label: "Innhald", name: "body", widget: "markdown"}
 
       - label: "Personvern"
@@ -47,4 +81,6 @@ collections:
         file: "content/personvern.md"
         fields:
           - {label: "Tittel", name: "title", widget: "string"}
+          - {label: "Skildring (SEO)", name: "description", widget: "string", required: false}
           - {label: "Innhald", name: "body", widget: "markdown"}
+

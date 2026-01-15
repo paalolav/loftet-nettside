@@ -2,7 +2,7 @@
 baseURL = 'https://loftet.no/'
 languageCode = 'nn'
 defaultContentLanguage = 'nn'
-title = 'Loftet Musikk'
+title = 'Loftet'
 
 # Tema (blir sett opp seinare)
 # theme = 'loftet-theme'
@@ -13,9 +13,15 @@ enableGitInfo = false
 
 [params]
   description = "Musikkinstrument og tilhøyr frå Sogndal"
-  author = "Loftet Musikk AS"
+  author = "Loftet"
   contact = "post@loftet.no"
   orgnr = "836 717 392"
+  ogImage = "/images/og-image.jpg"
+
+[sitemap]
+  changefreq = "monthly"
+  filename = "sitemap.xml"
+  priority = 0.5
 
 [menu]
   [[menu.main]]

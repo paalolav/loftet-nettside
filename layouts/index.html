@@ -1,6 +1,32 @@
 {{ define "main" }}
-<article>
-  <h1>{{ .Title }}</h1>
-  {{ .Content }}
-</article>
+<section class="hero">
+  <div class="hero__inner">
+    <div class="hero__image">
+      <img src="/images/TeiknaHus.png" alt="Loftet" loading="eager">
+    </div>
+    <h1>{{ .Title }}</h1>
+    <p class="hero__tagline">Musikkinstrument frå Sogndal sidan 1987</p>
+  </div>
+</section>
+
+{{ if .Content }}
+<section class="content-section">
+  <div class="container">
+    {{ .Content }}
+  </div>
+</section>
+{{ end }}
+
+{{ with .Params.aktuelt }}
+<section class="aktuelt">
+  <div class="container">
+    <span class="aktuelt__label">Aktuelt</span>
+    <h2 class="aktuelt__title">{{ .title }}</h2>
+    <p class="aktuelt__text">{{ .text }}</p>
+    {{ with .link }}
+    <a href="{{ .url }}" class="aktuelt__link">{{ .label }} &rarr;</a>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
 {{ end }}

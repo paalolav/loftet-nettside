@@ -1,0 +1,52 @@
+{{/*
+  Product Shortcode for Loftet Musikk AS
+
+  Bruk:
+  {{< product
+    name="Produktnamn"
+    price="299"
+    zettle_link="https://..."
+    hygiene=true
+    description="Produktskildring"
+    image="/images/produkt.jpg"
+  >}}
+*/}}
+
+<article class="product-card">
+  {{ with .Get "image" }}
+  <div class="product-card__image">
+    <img src="{{ . }}" alt="{{ $.Get "name" }}" loading="lazy">
+  </div>
+  {{ end }}
+
+  <div class="product-card__content">
+    <h3 class="product-card__title">{{ .Get "name" }}</h3>
+
+    {{ with .Get "description" }}
+    <p class="product-card__description">{{ . }}</p>
+    {{ end }}
+
+    <p class="product-card__price">{{ .Get "price" }} kr <span class="product-card__price-note">inkl. mva</span></p>
+
+    {{ if .Get "hygiene" }}
+    <div class="hygiene-notice" role="alert">
+      <span class="hygiene-notice__icon" aria-hidden="true">&#9888;</span>
+      <div class="hygiene-notice__text">
+        <strong>Hygienevare</strong>
+        <p>Dette produktet er forsegla av hygieniske årsaker. Angrerett gjeld kun for uopna produkt med intakt forsegling.</p>
+        <a href="/returpolitikk/" class="hygiene-notice__link">Les meir om returpolitikken vår</a>
+      </div>
+    </div>
+    {{ end }}
+
+    {{ with .Get "zettle_link" }}
+    <a href="{{ . }}" class="btn btn--primary product-card__buy" target="_blank" rel="noopener">
+      Kjøp no
+    </a>
+    {{ else }}
+    <p class="product-card__contact">
+      <a href="/kontakt/" class="btn btn--secondary">Kontakt oss for kjøp</a>
+    </p>
+    {{ end }}
+  </div>
+</article>

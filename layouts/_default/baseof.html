@@ -5,61 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
   <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
-  <style>
-    :root {
-      --farge-hovud: #2c3e50;
-      --farge-aksent: #e67e22;
-      --farge-bakgrunn: #fafafa;
-      --farge-tekst: #333;
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ .Permalink }}">
+
+  {{/* Open Graph */}}
+  <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+  <meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+  <meta property="og:locale" content="nn_NO">
+  {{ with .Site.Params.ogImage }}
+  <meta property="og:image" content="{{ . | absURL }}">
+  {{ end }}
+
+  {{/* Twitter Card */}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}">
+  <meta name="twitter:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+
+  {{/* CSS via Hugo Pipes */}}
+  {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{/* Strukturerte data - LocalBusiness */}}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicStore",
+    "name": "Loftet Musikk AS",
+    "description": "{{ .Site.Params.description }}",
+    "email": "{{ .Site.Params.contact }}",
+    "url": "{{ .Site.BaseURL }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Sogndal",
+      "addressCountry": "NO"
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      color: var(--farge-tekst);
-      background: var(--farge-bakgrunn);
-    }
-    header {
-      background: var(--farge-hovud);
-      color: white;
-      padding: 1rem 2rem;
-    }
-    header a { color: white; text-decoration: none; }
-    header nav { display: flex; gap: 2rem; align-items: center; }
-    header nav ul { display: flex; gap: 1.5rem; list-style: none; margin-left: auto; }
-    header nav ul a:hover { text-decoration: underline; }
-    main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-    footer {
-      background: var(--farge-hovud);
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 3rem;
-    }
-    footer a { color: white; }
-    h1, h2, h3 { color: var(--farge-hovud); margin-bottom: 1rem; }
-    p { margin-bottom: 1rem; }
-  </style>
+  }
+  </script>
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="/"><strong>{{ .Site.Title }}</strong></a>
-      <ul>
+  {{/* Skip-link for tilgjengelegheit */}}
+  <a href="#main-content" class="skip-link">Hopp til innhald</a>
+
+  <header class="site-header">
+    <nav class="site-header__nav">
+      <a href="/" class="site-header__brand">
+        <img src="/images/logo-svart.png" alt="Loftet" class="site-header__logo">
+      </a>
+      <button class="site-header__toggle" aria-label="Opne meny" aria-expanded="false">
+        <span aria-hidden="true">&#9776;</span>
+      </button>
+      <ul class="site-header__menu" role="navigation">
         {{ range .Site.Menus.main }}
-        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+        <li>
+          <a href="{{ .URL }}" class="site-header__link{{ if $.IsMenuCurrent "main" . }} site-header__link--active{{ end }}">
+            {{ .Name }}
+          </a>
+        </li>
         {{ end }}
       </ul>
     </nav>
   </header>
 
-  <main>
-    {{ block "main" . }}{{ end }}
+  <main class="site-main" id="main-content">
+    <div class="container">
+      {{ block "main" . }}{{ end }}
+    </div>
   </main>
 
-  <footer>
-    <p>&copy; {{ now.Year }} {{ .Site.Params.author }} | Org.nr: {{ .Site.Params.orgnr }}</p>
-    <p><a href="mailto:{{ .Site.Params.contact }}">{{ .Site.Params.contact }}</a></p>
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p class="site-footer__brand">Loftet</p>
+      <p class="site-footer__contact">
+        <a href="mailto:{{ .Site.Params.contact }}">{{ .Site.Params.contact }}</a>
+      </p>
+      <nav class="site-footer__links">
+        <a href="/om-oss/">Om oss</a>
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/vilkar/">Vilkår</a>
+        <a href="/personvern/">Personvern</a>
+      </nav>
+      <div class="site-footer__bottom">
+        <p>Loftet Musikk AS &middot; Org.nr {{ .Site.Params.orgnr }}</p>
+      </div>
+    </div>
   </footer>
+
+  {{/* Mobil-meny toggle */}}
+  <script>
+    (function() {
+      const toggle = document.querySelector('.site-header__toggle');
+      const menu = document.querySelector('.site-header__menu');
+      if (toggle && menu) {
+        toggle.addEventListener('click', function() {
+          const isOpen = menu.classList.toggle('site-header__menu--open');
+          toggle.setAttribute('aria-expanded', isOpen);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

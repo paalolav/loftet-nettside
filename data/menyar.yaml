@@ -1,0 +1,7 @@
+main:
+  - name: "Heim"
+    url: "/"
+  - name: "Om oss"
+    url: "/om-oss/"
+  - name: "Kontakt"
+    url: "/kontakt/"
